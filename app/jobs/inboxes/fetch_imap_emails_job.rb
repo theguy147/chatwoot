@@ -38,7 +38,7 @@ class Inboxes::FetchImapEmailsJob < ApplicationJob
     last_email_time = DateTime.parse(Net::IMAP.format_datetime(last_email_time(channel)))
 
     received_mails(imap_inbox).each do |message_id|
-      inbound_mail = Mail.read_from_string imap_inbox.fetch(message_id, 'RFC822')[0].attr['RFC822']
+      inbound_mail = Mail.read_from_string imap_inbox.fetch(message_id, 'BODY.PEEK[]')[0].attr['BODY[]']
 
       mail_info_logger(channel, inbound_mail, message_id)
 
@@ -76,7 +76,7 @@ class Inboxes::FetchImapEmailsJob < ApplicationJob
 
   def process_mails(imap_inbox, channel)
     received_mails(imap_inbox).each do |message_id|
-      inbound_mail = Mail.read_from_string imap_inbox.fetch(message_id, 'RFC822')[0].attr['RFC822']
+      inbound_mail = Mail.read_from_string imap_inbox.fetch(message_id, 'BODY.PEEK[]')[0].attr['BODY[]']
 
       mail_info_logger(channel, inbound_mail, message_id)
 
